@@ -1,5 +1,8 @@
 import socket
 import threading
+from inputimeout import inputimeout
+import select
+import sys
 
 c = socket.socket()
 
@@ -13,9 +16,19 @@ def recieve():
     print(msg)
 
 def sendmsg(name):
-    msg=input(f"{name}>>")
-    msg1=f'\n{name}>> '+msg
-    c.send(bytes(msg1,'utf-8'))
+
+        #read_sockets,write_socket, error_socket = select.select(sys.stdin,[],[])
+
+
+        msg = sys.stdin.readline()
+        print("--------------------")
+        if msg!='':
+            msg1=f'\n{name}>> '+str(msg)
+            c.send(bytes(msg1,'utf-8'))
+
+
+
+
 
 
 while True:

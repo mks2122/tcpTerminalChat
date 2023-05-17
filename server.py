@@ -17,7 +17,7 @@ def client(c, addr,name):
                 message = c.recv(2048).decode()
                 if message:
                      print ('\n' + message)
-                     msg= ">>>" + message
+                     msg= message
                      msg_send(msg, c)
                 else:
                     remove(c)
@@ -25,7 +25,7 @@ def client(c, addr,name):
                 continue
 def msg_send(msg, c):
     for i in usr:
-        if i!=c:
+        # if i!=c:
             try:
                 i.send(bytes(msg, 'utf-8'))
             except:
@@ -41,11 +41,9 @@ while True:
     c, addr = s.accept()
     name=c.recv(1024).decode()
     usr.append(c)
-    print("Welcome to the chat",name)
-    print(usr)
+    print("Welcome to the chat",name) 
     c.send(bytes("Welcome to the chat!!",'utf-8'))
     _thread.start_new_thread(client,(c,addr,name))
-    print(len(usr))
 c.close()
 s.close()
 
