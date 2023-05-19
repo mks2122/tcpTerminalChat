@@ -13,43 +13,42 @@ usr={}
 def client(name,rn):
  
     while True:
-            try:
-                message = c.recv(2048).decode()
-                if message:
-                     print ('\n' + message)
-                     msg= message
-                     msg_send(msg,c,rn)
-                else:
+            
+                try:
+                    message = c.recv(2048).decode()
+                    print("\n"+message)
+                    msg_send(message,c,rn)
+                except ConnectionResetError:
                     remove(c)
-            except:
-                continue
+            
 
 def msg_send(msg, c,roomName):
     print(usr)
     for i in usr.keys():
         if usr[i] == roomName:
             try:
-                i.send(bytes(msg, 'utf-8'))
+                print(f'The msg is sent to , {usr[i]} from {i}')
+                c.send(bytes(msg, 'utf-8'))
             except Exception:
-                i.close()
+                c.close()
                 remove(i)
             else:
                 continue
-
-def remove(c):
-    if c  in usr:
-        usr.remove(c)
+#todo: add exception fo rconnection reset error to rmove the user in line 17
+def remove(name):
+    if name in usr:
+        del usr[name]
 
 rooms=[]
 def create_room(name):
     roomName=c.recv(1024).decode()
     rooms.append(roomName)
-    usr[c]=roomName
+    usr[name]=roomName
     c.send(bytes("Welcome to the chat room",'utf-8'))
     a=threading.Thread(client(name,roomName)) 
 
 def join_room(name):
-    print("In join function")
+
     if len(rooms)==0:
         c.send(bytes("1",'utf-8'))
         c.send(bytes("No Rooms Found \n create a new room",'utf-8'))
@@ -63,7 +62,7 @@ def join_room(name):
             print("wrong room")
             join_room(name)
         try:
-            usr[c]=rooms[r-1]
+            usr[name]=rooms[r-1]
             c.send(bytes("Welcome to the chat room",'utf-8'))
             cli=threading.Thread(target=client(name,roomName))
             cli.start()
@@ -93,7 +92,7 @@ while True:
 
     c, addr = s.accept()
     name=c.recv(1024).decode()
-    usr[c]=""
+    usr[name]=""
     print("connections accepted")
     room(name)
 
