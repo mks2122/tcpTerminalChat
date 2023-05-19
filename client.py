@@ -41,7 +41,7 @@ def room():
     ui=int(input("Enter an option: "))
     c.send(bytes(str(ui),'utf-8'))
     if ui==3:
-        for i in list(map(str,c.recv(1024).decode().split())):
+        for i in list(map(str,c.recv(1024).decode().split("-"))):
             print(i,end="\n")
         room()
     elif ui==2:
@@ -70,11 +70,14 @@ room()
 
 
 while True:
-    rec=threading.Thread(target=recieve)
-    rec.start()
-
     snd=threading.Thread(target=sendmsg(name))
     snd.start()
+
+
+    rec=threading.Thread(target=recieve)
+    rec.start()
+    snd.join()
+
     
 
 

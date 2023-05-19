@@ -1,5 +1,5 @@
 import socket
-import _thread
+import threading
 
 s = socket.socket()
 
@@ -46,7 +46,7 @@ def create_room(name):
     rooms.append(roomName)
     usr[c]=roomName
     c.send(bytes("Welcome to the chat room",'utf-8'))
-    _thread.start_new_thread(client,(name,roomName)) 
+    a=threading.Thread(client(name,roomName)) 
 
 def join_room(name):
     print("In join function")
@@ -65,19 +65,15 @@ def join_room(name):
         try:
             usr[c]=rooms[r-1]
             c.send(bytes("Welcome to the chat room",'utf-8'))
-            _thread.start_new_thread(client,(name,roomName))
+            cli=threading.Thread(target=client(name,roomName))
+            cli.start()
         except:
             pass
         
-        
-        
-        
-
-
    
 def show_room(name):
     if len(rooms) != 0:
-        roomList=" ".join(rooms)
+        roomList="-".join(rooms)
         c.send(bytes(roomList,"utf-8"))
     room(name)
 
