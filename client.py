@@ -70,6 +70,7 @@ room()
 
 
 while True:
+<<<<<<< HEAD
     snd=threading.Thread(target=sendmsg(name))
     snd.start()
 
@@ -78,6 +79,13 @@ while True:
     rec.start()
     snd.join()
 
+=======
+    rec=threading.Thread(target=recieve)
+    rec.start()
+
+    snd=threading.Thread(target=sendmsg(name))
+    snd.start()
+>>>>>>> parent of e8b732d (error)
     
 
 
