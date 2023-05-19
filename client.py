@@ -73,6 +73,7 @@ while True:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     snd=threading.Thread(target=sendmsg(name))
     snd.start()
 
@@ -84,6 +85,15 @@ while True:
 =======
     rec=threading.Thread(target=recieve)
     rec.start()
+=======
+    rec=threading.Thread(target=recieve)
+    rec.start()
+
+    snd=threading.Thread(target=sendmsg(name))
+    snd.start()
+    
+
+>>>>>>> parent of e8b732d (error)
 
 =======
  if x==0:
