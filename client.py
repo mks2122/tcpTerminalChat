@@ -8,8 +8,7 @@ c = socket.socket()
 c.connect(('localhost',9999))
 name=input("Enter your name: ")
 c.send(bytes(name,'utf-8'))
-global x
-x=0
+
 def create():
     
     roomName=input("Enter the chat room name to create:")
@@ -27,11 +26,10 @@ def join():
         print("Room Number \t:\tRoom Number\t")
         rooms=list(map(str,(c.recv(1024).decode()).split("-")))
         for i in range(len(rooms)): 
-                print(f"\t{i+1}\t\t:\t{rooms[i]}")
+                print(f"{i+1}\t:\t{rooms[i]}")
         r=int(input("Enter the room number: "))
         if r-1<=len(rooms):
             c.send(bytes(str(r),'utf-8'))
-            print(c.recv(1024).decode())
         else:
             c.send(bytes("1111","utf-8"))
             print("Wrong input! Try again")
@@ -56,22 +54,15 @@ def room():
 
 
 def recieve():
-    try :
-        msg=c.recv(1024).decode()
-        # print("Printing msg")
-        print(msg)
-    except KeyboardInterrupt:
-        x=1
+    msg=c.recv(1024).decode()
+    print(msg)
 
 def sendmsg(name):
-        
-        try:
-            msg = sys.stdin.readline()
-            if msg!='':
-                msg1=f'\n{name}>> '+str(msg)
-                c.send(bytes(msg1,'utf-8'))
-        except KeyboardInterrupt:
-            x=1
+
+        msg = sys.stdin.readline()
+        if msg!='':
+            msg1=f'\n{name}>> '+str(msg)
+            c.send(bytes(msg1,'utf-8'))
 
 
 
@@ -79,12 +70,13 @@ room()
 
 
 while True:
- if x==0:
+    rec=threading.Thread(target=recieve)
+    rec.start()
+
     snd=threading.Thread(target=sendmsg(name))
     snd.start()
     
-    rec=threading.Thread(target=recieve)
-    rec.start()
+
 
 
 c.close()
