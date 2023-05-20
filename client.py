@@ -18,13 +18,13 @@ def create():
 
 def join():
     i=c.recv(1024).decode()
-
     if int(i)==1:
-        print(c.recv(1024).decode())
+        print("No Rooms found, create a new room!")
         room()
     else:
         print("Room Number \t:\tRoom Number\t")
-        rooms=list(map(str,(c.recv(1024).decode()).split("-")))
+        strRoom=c.recv(1024).decode()
+        rooms=list(map(str,strRoom.split("-")))
         for i in range(len(rooms)): 
                 print(f"{i+1}\t:\t{rooms[i]}")
         r=int(input("Enter the room number: "))
@@ -50,35 +50,25 @@ def room():
         create()
 
     
-
-
-
 def recieve():
+  while True:  
     msg=c.recv(1024).decode()
     print(msg)
 
 def sendmsg(name):
-
+    while True:
         msg = sys.stdin.readline()
         if msg!='':
             msg1=f'\n{name}>> '+str(msg)
             c.send(bytes(msg1,'utf-8'))
-
-
-
 room()
-
-
 while True:
     rec=threading.Thread(target=recieve)
     rec.start()
 
     snd=threading.Thread(target=sendmsg(name))
     snd.start()
-    
-
-
-
+    rec.join()
 c.close()
 
 
